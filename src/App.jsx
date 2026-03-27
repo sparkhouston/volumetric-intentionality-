@@ -225,9 +225,7 @@ export default function App() {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").then(reg => {
-        console.log("SW registered");
-      }).catch(err => console.log("SW failed", err));
+      navigator.serviceWorker.register("/sw.js").catch(err => console.log("SW failed", err));
     }
     scheduleNotifications();
   }, []);
@@ -399,7 +397,7 @@ export default function App() {
               {m.extracted&&m.extracted.length>0&&(
                 <div style={{marginTop:8,display:"flex",flexWrap:"wrap",gap:6}}>
                   {m.extracted.map((t,i)=>(
-                    <div key={i} style={{fontSize:9,padding:"3px 10px",background:t.pillar==="earth"?"#f5f5f5":t.pillar==="heaven"?"#eff6ff":"#f0fdf4",border:`1px solid ${t.pillar==="earth"?"#ddd":t.pillar==="heaven"?"#bfdbfe":"#bbf7d0"}`,color:t.pillar==="earth"?"#000":t.pillar==="heaven"?"#1a56db":"#166534",borderRadius:20}}>
+                    <div key={i} style={{fontSize:9,padding:"3px 10px",background:t.pillar==="earth"?"#f5f5f5":t.pillar==="heaven"?"#eff6ff":"#f0fdf4",border:`1px solid ${t.pillar==="earth"?"#ddd":t.pillar==="heaven"?"#bfdbfe":"#bbf7d0"}`,color:t.pillar==="earth"?"#000":t.pillar==="heaven"?"#1a56db":"#166634",borderRadius:20}}>
                       ✓ {t.pillar} · {t.priority} · {t.text.slice(0,30)}{t.text.length>30?"…":""}
                     </div>
                   ))}
@@ -526,7 +524,7 @@ export default function App() {
     const updateProgress = (id, val) => setGoals(prev => prev.map(g => g.id===id ? {...g, progress:val} : g));
     const deleteGoal = (id) => setGoals(prev => prev.filter(g => g.id!==id));
     const horizonLabel = (h) => HORIZONS.find(x=>x.id===h)?.label || h;
-    const pillarColor = (p) => p==="earth" ? "#CC0000" : p==="heaven" ? "#1a56db" : "#166534";
+    const pillarColor = (p) => p==="earth" ? "#CC0000" : p==="heaven" ? "#1a56db" : "#166634";
     const relatedTasks = (goal) => {
       const words = goal.text.toLowerCase().split(" ").filter(w=>w.length>3);
       return Object.values(tasks).flat().filter(t => !t.done && words.some(w => t.text.toLowerCase().includes(w))).slice(0,3);
@@ -655,6 +653,17 @@ export default function App() {
           ))}
         </div>
       )}
+      <div className={card} style={{textAlign:"center",padding:"20px"}}>
+        <div style={{fontSize:10,color:"#000",fontWeight:600,marginBottom:4}}>🔔 Alarm Notifications</div>
+        <div style={{fontSize:10,color:"#aaa",marginBottom:12}}>
+          {typeof Notification!=="undefined"&&Notification.permission==="granted"
+            ? "✓ Alarms enabled. You will be notified on time."
+            : "Tap below to enable alarms for your daily schedule."}
+        </div>
+        {typeof Notification!=="undefined"&&Notification.permission!=="granted"&&(
+          <button className={btnS} onClick={scheduleNotifications}>ENABLE ALARMS</button>
+        )}
+      </div>
     </div>
   );
 
