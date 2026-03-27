@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const SK = "vi_v6";
+const SK = "vi_v7";
 const load = () => { try { const r = localStorage.getItem(SK); return r ? JSON.parse(r) : null; } catch { return null; } };
 const save = (s) => { try { localStorage.setItem(SK, JSON.stringify(s)); } catch {} };
 
